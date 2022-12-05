@@ -7,7 +7,7 @@ const findMostCalories = (input: string): number => {
   return Math.max(...calorieSums)
 }
 
-export const generateElfBagsFromInput = (input: string) => {
+const generateElfBagsFromInput = (input: string) => {
   return input.split('\n')
     .reduce((acc: number[][], curr) => {
       const cal = Number(curr)
@@ -19,7 +19,7 @@ export const generateElfBagsFromInput = (input: string) => {
     }, [])
 }
 
-export const sumCaloriesPerElfBag = (elfBags: number[][]) => elfBags.map(bag => {
+const sumCaloriesPerElfBag = (elfBags: number[][]) => elfBags.map(bag => {
   return bag.reduce((total, item) => total + item, 0)
 })
 

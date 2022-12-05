@@ -12,18 +12,20 @@ const isOnePairFullyContained = (group: number[][]): boolean => {
 	return false
 }
 
-const generateRangePairs = (input: string): number => {
-	const groups = input.split('\n').map((group) => {
+const generateRangePairs = (input: string): number[][][] => {
+	return input.split('\n').map((group) => {
 		return group.split(',').map((pair) => {
 			return pair.split('-').map((n) => Number(n))
 		})
 	})
+}
 
+const sumContainedPairs = (input: string): number => {
+	const groups = generateRangePairs(input)
 	const containedPairsTotal = groups.reduce((sum, group) => {
 		return isOnePairFullyContained(group) ? sum + 1 : sum
 	}, 0)
-
 	return containedPairsTotal
 }
 
-console.log(generateRangePairs(input))
+console.log(sumContainedPairs(input))

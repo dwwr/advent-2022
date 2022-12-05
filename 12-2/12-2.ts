@@ -12,6 +12,12 @@ const myMoves: Record<string, string> = {
   Z: 'scissors'
 }
 
+const desiredOutcomes: Record<string, string> = {
+  X: 'lose',
+  Y: 'draw',
+  Z: 'win'
+}
+
 // opponentMove[myMove] === myOutcome
 const outcomeMap: Record<string, Record<string, string>> = {
   rock: {
@@ -54,14 +60,22 @@ const scoreRound = (round: string): number => {
   return outcomeScores[outcome] + moveScores[myMove]
 }
 
-const scoreStrategyGuide = (input: string): number => {
+const scoreRoundForDesiredOutcome = (round: string): number => {
+  const oppMove = oppMoves[round[0]]
+  const desiredOutcome = desiredOutcomes[round[2]]
+  const myMove = Object.keys(outcomeMap[oppMove]).find(move => outcomeMap[oppMove][move] === desiredOutcome) as string
+  const myScore = moveScores[myMove]
+  return outcomeScores[desiredOutcome] + myScore
+}
+
+const scoreStrategyGuide = (input: string, desiredOutcomes?: boolean): number => {
   const rounds = generateRoundsFromInput(input)
   const totalScore = rounds.reduce((total, round) => {
-    const roundScore = scoreRound(round)
+    const roundScore = desiredOutcomes ? scoreRoundForDesiredOutcome(round) : scoreRound(round)
     return total + roundScore
   }, 0)
   return totalScore
 }
 
-
 console.log(scoreStrategyGuide(input))
+console.log(scoreStrategyGuide(input, true))

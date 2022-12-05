@@ -12,6 +12,17 @@ const isOnePairFullyContained = (group: number[][]): boolean => {
 	return false
 }
 
+const doPairsOverlap = (group: number[][]): boolean => {
+	const [first, second] = group
+	if (
+		(first[0] >= second[0] && first[0] <= second[1]) ||
+		(second[0] >= first[0] && second[0] <= first[1])
+	) {
+		return true
+	}
+	return false
+}
+
 const generateRangePairs = (input: string): number[][][] => {
 	return input.split('\n').map((group) => {
 		return group.split(',').map((pair) => {
@@ -28,4 +39,15 @@ const sumContainedPairs = (input: string): number => {
 	return containedPairsTotal
 }
 
+const sumOverlappingPairs = (input: string): number => {
+	const groups = generateRangePairs(input)
+	console.log(doPairsOverlap(groups[0]))
+
+	const overlappingPairsTotal = groups.reduce((sum, group) => {
+		return doPairsOverlap(group) ? sum + 1 : sum
+	}, 0)
+	return overlappingPairsTotal
+}
+
 console.log(sumContainedPairs(input))
+console.log(sumOverlappingPairs(input))

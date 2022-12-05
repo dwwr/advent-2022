@@ -23,4 +23,14 @@ export const sumCaloriesPerElfBag = (elfBags: number[][]) => elfBags.map(bag => 
   return bag.reduce((total, item) => total + item, 0)
 })
 
+const sumTopThreeElfBags = (input: string) => {
+  const elfBags = generateElfBagsFromInput(input)
+  const sums = sumCaloriesPerElfBag(elfBags)
+  const topThree = sums.sort((a, b) => a > b ? 1 : -1).slice(-3)
+  return topThree.reduce((total, item) => total + item, 0)
+}
+
 console.log(findMostCalories(input))
+console.log(sumTopThreeElfBags(input))
+
+

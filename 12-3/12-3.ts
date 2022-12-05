@@ -1,4 +1,4 @@
-import { input } from "./input"
+import { input } from './input'
 
 const scoreMap: Record<string, number> = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').reduce((map: Record<string, number>, letter, i) => {
   map[letter] = i + 1

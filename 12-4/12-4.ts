@@ -41,8 +41,6 @@ const sumContainedPairs = (input: string): number => {
 
 const sumOverlappingPairs = (input: string): number => {
   const groups = generateRangePairs(input)
-  console.log(doPairsOverlap(groups[0]))
-
   const overlappingPairsTotal = groups.reduce((sum, group) => {
     return doPairsOverlap(group) ? sum + 1 : sum
   }, 0)

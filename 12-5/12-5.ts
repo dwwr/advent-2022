@@ -15,13 +15,25 @@ const startingState = `    [C]         [Q]         [V]
 // crates are 'popped' and 'pushed' one at a time
 // return string of top crates from each stack in form 'PCVPQSPVZ' (For example above)
 
-const parseStacks = (input: string) => {
+const moveCrate = (
+  stacks: Record<string, string[]>,
+  startingStack: number,
+  endingStack: number
+) => {
+  const crateToMove = stacks[startingStack].slice(-1)[0]
+  return {
+    ...stacks,
+    [startingStack]: [...stacks[startingStack].slice(0, -1)],
+    [endingStack]: [...stacks[endingStack], crateToMove],
+  }
+}
+
+const parseStacks = (input: string): Record<string, string[]> => {
   const cleanInput = input
     .replace(/\[/g, ' ')
     .replace(/\]/g, ' ')
     .split('\n')
     .reverse()
-  console.log(cleanInput)
 
   const [base, rows] = [cleanInput[0], cleanInput.slice(1)]
 
@@ -43,7 +55,44 @@ const parseStacks = (input: string) => {
       }
     })
   })
-  console.log(stacks)
+  return stacks
 }
 
-parseStacks(startingState)
+const parseMoves = (moves: string) => {
+  const clean = moves.split('\n').map((move) => {
+    return {
+      numberOfCrates: Number(move.slice(5, move.indexOf('f') - 1)),
+      startingCrate: Number(
+        move.slice(move.indexOf('m ') + 2, move.indexOf('t') - 1)
+      ),
+      endingCrate: Number(move[move.length - 1]),
+    }
+  })
+  return clean
+}
+
+const rearrangeStacks = (startingState: string, moves: string) => {
+  const parsedState = parseStacks(startingState)
+  const parsedMoves = parseMoves(moves)
+
+  const finalState = parsedMoves.reduce((state, move) => {
+    let newState = state
+    for (let i = 0; i < move.numberOfCrates; i++) {
+      newState = moveCrate(newState, move.startingCrate, move.endingCrate)
+    }
+    return newState
+  }, parsedState)
+
+  return finalState
+}
+
+const getStackTops = (endingState: Record<string, string[]>): string => {
+  const endingArray = Object.values(endingState)
+  const stackTops = endingArray.reduce((acc, curr) => {
+    return acc + curr[curr.length - 1]
+  }, '')
+  return stackTops
+}
+
+const finalState = rearrangeStacks(startingState, input)
+console.log(getStackTops(finalState))

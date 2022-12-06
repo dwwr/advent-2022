@@ -15,19 +15,6 @@ const startingState = `    [C]         [Q]         [V]
 // crates are 'popped' and 'pushed' one at a time
 // return string of top crates from each stack in form 'PCVPQSPVZ' (For example above)
 
-const moveCrate = (
-  stacks: Record<string, string[]>,
-  startingStack: number,
-  endingStack: number
-) => {
-  const crateToMove = stacks[startingStack].slice(-1)[0]
-  return {
-    ...stacks,
-    [startingStack]: [...stacks[startingStack].slice(0, -1)],
-    [endingStack]: [...stacks[endingStack], crateToMove],
-  }
-}
-
 const parseStacks = (input: string): Record<string, string[]> => {
   const cleanInput = input
     .replace(/\[/g, ' ')
@@ -71,14 +58,27 @@ const parseMoves = (moves: string) => {
   return clean
 }
 
-const rearrangeStacks = (startingState: string, moves: string) => {
+const moveOneCrate = (
+  stacks: Record<string, string[]>,
+  startingStack: number,
+  endingStack: number
+) => {
+  const crateToMove = stacks[startingStack].slice(-1)[0]
+  return {
+    ...stacks,
+    [startingStack]: [...stacks[startingStack].slice(0, -1)],
+    [endingStack]: [...stacks[endingStack], crateToMove],
+  }
+}
+
+const rearrangeStacksOneByOne = (startingState: string, moves: string) => {
   const parsedState = parseStacks(startingState)
   const parsedMoves = parseMoves(moves)
 
   const finalState = parsedMoves.reduce((state, move) => {
     let newState = state
     for (let i = 0; i < move.numberOfCrates; i++) {
-      newState = moveCrate(newState, move.startingCrate, move.endingCrate)
+      newState = moveOneCrate(newState, move.startingCrate, move.endingCrate)
     }
     return newState
   }, parsedState)
@@ -94,5 +94,5 @@ const getStackTops = (endingState: Record<string, string[]>): string => {
   return stackTops
 }
 
-const finalState = rearrangeStacks(startingState, input)
-console.log(getStackTops(finalState))
+const finalStatePart1 = rearrangeStacksOneByOne(startingState, input)
+console.log(getStackTops(finalStatePart1))

@@ -22,20 +22,28 @@ const parseStacks = (input: string) => {
     .split('\n')
     .reverse()
   console.log(cleanInput)
-  // const cols = cleanInput[0].split(' ').join('').split('')
-  // const stacks = Array.from(cols).reduce((acc, curr) => {
-  //   return (acc?[curr] = [])
-  // }, {})
 
-  // console.log(stacks)
-  // console.log(cols)
-  // cleanInput.forEach((row, i, rows) => {
-  //   const char = row[i]
-  //   if (char !== ' ') {
-  //     stacks[rows[0][i]] = [...stacks[rows[0][i]]]
-  //   }
-  // })
-  // console.log(stacks)
+  const [base, rows] = [cleanInput[0], cleanInput.slice(1)]
+
+  const stacks: Record<string, Array<string>> = [...base].reduce(
+    (acc, curr) => {
+      if (curr === ' ') {
+        return acc
+      }
+      return { ...acc, [curr]: [] }
+    },
+    {}
+  )
+
+  rows.forEach((row) => {
+    ;[...row].forEach((crate, i) => {
+      if (crate !== ' ') {
+        const baseIndex: number = Number(base[i])
+        stacks[baseIndex] = [...stacks[baseIndex], crate]
+      }
+    })
+  })
+  console.log(stacks)
 }
 
 parseStacks(startingState)

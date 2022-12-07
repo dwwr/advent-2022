@@ -10,11 +10,6 @@ const startingState = `    [C]         [Q]         [V]
 [N] [J] [M] [L] [P] [C] [H] [Z] [R]
  1   2   3   4   5   6   7   8   9`
 
-// move 2 from 4 to 6
-// move x crates from stack y to stack z
-// crates are 'popped' and 'pushed' one at a time
-// return string of top crates from each stack in form 'PCVPQSPVZ' (For example above)
-
 const parseStacks = (input: string): Record<string, string[]> => {
   const cleanInput = input
     .replace(/\[/g, ' ')

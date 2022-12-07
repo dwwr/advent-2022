@@ -1,19 +1,20 @@
 import { input } from './input'
 
-
-// this is all bad
 const detectStartOfPacketMarker = (
   input: string,
   markerLength: number
 ): number => {
-  const markerDepth = [...input].reduce((depth) => {
-    const slice = input.slice(depth, depth + markerLength)
-    if (slice.match(/^.*(.).*\1.*$/) === null) {
+  const markerDepth = [...input].reduce((depth, _, i) => {
+    if (depth) {
       return depth
     }
-    return depth + 1
+    const slice = input.slice(i, i + markerLength)
+    if (slice.match(/^.*(.).*\1.*$/) === null) {
+      return i + markerLength // offset
+    }
+    return 0
   }, 0)
-  return markerDepth + markerLength // offset
+  return markerDepth
 }
 
 console.log(detectStartOfPacketMarker(input, 4))

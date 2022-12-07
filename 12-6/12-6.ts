@@ -3,10 +3,8 @@ import { input } from './input'
 
 // this is all bad
 const detectStartOfPacketMarker = (input: string): number => {
-  const markerDepth = [...input].reduce((depth, c, i) => {
-    const slice = `${input[depth]}${input[depth + 1]}${input[depth + 2]}${
-      input[depth + 3]
-    }`
+  const markerDepth = [...input].reduce((depth) => {
+    const slice = input.slice(depth, depth + 4)
     if (slice.match(/^.*(.).*\1.*$/) === null) {
       return depth
     }

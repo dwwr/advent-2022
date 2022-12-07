@@ -47,12 +47,14 @@ const parseStacks = (input: string): Record<string, string[]> => {
 
 const parseMoves = (moves: string) => {
   const clean = moves.split('\n').map((move) => {
+    const nums = move
+      .split(' ')
+      .map((c) => Number(c))
+      .filter((n) => !!n)
     return {
-      numberOfCrates: Number(move.slice(5, move.indexOf('f') - 1)),
-      startingCrate: Number(
-        move.slice(move.indexOf('m ') + 2, move.indexOf('t') - 1)
-      ),
-      endingCrate: Number(move[move.length - 1]),
+      numberOfCrates: nums[0],
+      startingCrate: nums[1],
+      endingCrate: nums[2],
     }
   })
   return clean

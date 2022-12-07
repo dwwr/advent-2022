@@ -58,16 +58,18 @@ const parseMoves = (moves: string) => {
   return clean
 }
 
-const moveOneCrate = (
+const moveCrate = (
   stacks: Record<string, string[]>,
   startingStack: number,
-  endingStack: number
+  endingStack: number,
+  toMove?: number
 ) => {
-  const crateToMove = stacks[startingStack].slice(-1)[0]
+  const numberOfCrates = toMove || 1
+  const cratesToMove = stacks[startingStack].slice(-numberOfCrates || -1)
   return {
     ...stacks,
-    [startingStack]: [...stacks[startingStack].slice(0, -1)],
-    [endingStack]: [...stacks[endingStack], crateToMove],
+    [startingStack]: [...stacks[startingStack].slice(0, -numberOfCrates || -1)],
+    [endingStack]: [...stacks[endingStack], ...cratesToMove],
   }
 }
 
@@ -78,11 +80,26 @@ const rearrangeStacksOneByOne = (startingState: string, moves: string) => {
   const finalState = parsedMoves.reduce((state, move) => {
     let newState = state
     for (let i = 0; i < move.numberOfCrates; i++) {
-      newState = moveOneCrate(newState, move.startingCrate, move.endingCrate)
+      newState = moveCrate(newState, move.startingCrate, move.endingCrate)
     }
     return newState
   }, parsedState)
 
+  return finalState
+}
+
+const rearrangeStacksInGroups = (startingState: string, moves: string) => {
+  const parsedState = parseStacks(startingState)
+  const parsedMoves = parseMoves(moves)
+
+  const finalState = parsedMoves.reduce((state, move) => {
+    return moveCrate(
+      state,
+      move.startingCrate,
+      move.endingCrate,
+      move.numberOfCrates
+    )
+  }, parsedState)
   return finalState
 }
 
@@ -96,3 +113,6 @@ const getStackTops = (endingState: Record<string, string[]>): string => {
 
 const finalStatePart1 = rearrangeStacksOneByOne(startingState, input)
 console.log(getStackTops(finalStatePart1))
+
+const finalStatePart2 = rearrangeStacksInGroups(startingState, input)
+console.log(getStackTops(finalStatePart2))

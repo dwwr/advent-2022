@@ -58,10 +58,10 @@ const moveCrate = (
   toMove?: number
 ) => {
   const numberOfCrates = toMove || 1
-  const cratesToMove = stacks[startingStack].slice(-numberOfCrates || -1)
+  const cratesToMove = stacks[startingStack].slice(-numberOfCrates)
   return {
     ...stacks,
-    [startingStack]: [...stacks[startingStack].slice(0, -numberOfCrates || -1)],
+    [startingStack]: [...stacks[startingStack].slice(0, -numberOfCrates)],
     [endingStack]: [...stacks[endingStack], ...cratesToMove],
   }
 }

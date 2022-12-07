@@ -34,14 +34,14 @@ const parseStacks = (input: string): Record<string, string[]> => {
     {}
   )
 
-  rows.forEach((row) => {
-    ;[...row].forEach((crate, i) => {
+  rows.forEach((row) =>
+    [...row].forEach((crate, i) => {
       if (crate !== ' ') {
         const baseIndex: number = Number(base[i])
         stacks[baseIndex] = [...stacks[baseIndex], crate]
       }
     })
-  })
+  )
   return stacks
 }
 
@@ -51,11 +51,7 @@ const parseMoves = (moves: string) => {
       .split(' ')
       .map((c) => Number(c))
       .filter((n) => !!n)
-    return {
-      numberOfCrates: nums[0],
-      startingCrate: nums[1],
-      endingCrate: nums[2],
-    }
+    return nums // [0] crates from [1] to [2]
   })
   return clean
 }
@@ -81,8 +77,8 @@ const rearrangeStacksOneByOne = (startingState: string, moves: string) => {
 
   const finalState = parsedMoves.reduce((state, move) => {
     let newState = state
-    for (let i = 0; i < move.numberOfCrates; i++) {
-      newState = moveCrate(newState, move.startingCrate, move.endingCrate)
+    for (let i = 0; i < move[0]; i++) {
+      newState = moveCrate(newState, move[1], move[2])
     }
     return newState
   }, parsedState)
@@ -95,12 +91,7 @@ const rearrangeStacksInGroups = (startingState: string, moves: string) => {
   const parsedMoves = parseMoves(moves)
 
   const finalState = parsedMoves.reduce((state, move) => {
-    return moveCrate(
-      state,
-      move.startingCrate,
-      move.endingCrate,
-      move.numberOfCrates
-    )
+    return moveCrate(state, move[1], move[2], move[0])
   }, parsedState)
   return finalState
 }

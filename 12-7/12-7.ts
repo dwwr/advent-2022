@@ -1,7 +1,6 @@
 import { input } from './input'
 
-const shortInput = `$ cd /
-$ ls
+const shortInput = `$ ls
 dir a
 14848514 b.txt
 8504156 c.dat
@@ -30,40 +29,51 @@ $ ls
 
 interface Node {
   name: string
+  size?: number
   parent?: Node
-  children?: Node[]
+  children: Node[]
 }
 
-const buildFS = (input: string): Record<string, any> => {
+const buildFS = (input: string): Node => {
   const commands = input.split('\n')
-  // console.log(commands)
 
-  const tree = commands.reduce((a, c) => {
-    return buildNode(c, a, a)
-  }, {})
-  console.log('tree', tree)
+  const tree = commands.reduce(
+    (a: Node, c) => {
+      return buildNode(c, a)
+    },
+    {
+      name: '/',
+      children: [],
+    }
+  )
+  console.log('tree', JSON.stringify(tree))
   return tree
 }
 
-const buildNode = (
-  input: string,
-  tree: Record<string, any>,
-  parent: Record<string, any>
-): Record<string, any> => {
-  console.log(input.slice(0, 4))
-  if (input.slice(0, 7) === '$ cd ..') {
-    return buildNode(parent[input.slice(5)] || '', tree, parent)
-  }
-  if (input.slice(0, 4) === '$ cd') {
+const buildNode = (input: string, tree: Node): Node => {
+  const args = input.split(' ')
+  // console.log('command', input)
+  console.log(args)
+
+  console.log(tree)
+  if (args[1] === 'cd') {
+    if (args[2] === '..') {
+      return tree
+    }
     return {
       ...tree,
-      [input.slice(5)]: buildNode(input.slice(5), tree[input.slice(5)], tree),
+      children: [...tree.children, buildNode(input, tree)],
     }
   }
-  if (input.slice(0, 4) === '$ ls') {
+
+  if (args[1] === 'ls') {
     return tree
   }
-  return { ...tree }
+
+  return {
+    ...tree,
+    children: [...tree.children, { name: input, children: [] }],
+  }
 }
 
 buildFS(shortInput)
